@@ -3,6 +3,17 @@ const express = require( 'express' );
 const router = express.Router();
 const pool = require( '../pool' );
 // routes
+router.delete( '/:id', ( req, res )=>{
+    console.log( 'in /delete:', req.params );
+    let queryString = `DELETE FROM items WHERE id=($1)`;
+    pool.query( queryString, [ req.params.id ]).then( ( results )=>{
+        console.log( 'deleted:', req.params.id );
+        res.sendStatus( 200 );
+    }).catch( ( err )=>{
+        console.log( err );
+        res.sendStatus( 500 );
+    }) //end query
+}) // end /delete
 router.get( '/', ( req, res )=>{
     console.log( 'in /items GET' );
     let queryString = 'SELECT * FROM items';
@@ -25,5 +36,6 @@ router.post( '/', (req, res )=>{
         res.sendStatus( 500 );
     }) // end query
 }) // end POST 
+
 // exports
 module.exports = router;
